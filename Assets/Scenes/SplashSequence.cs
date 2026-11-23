@@ -15,6 +15,11 @@ public class SplashSequence : MonoBehaviour
     [Header("Next Scene")]
     [SerializeField] private string nextSceneName = "titlescreen";
 
+    private void Start()
+    {
+        StartCoroutine(PlaySplashRoutine());
+    }
+
     private IEnumerator PlaySplashRoutine()
     {
         // Ensure starting opacity is 0
@@ -33,4 +38,15 @@ public class SplashSequence : MonoBehaviour
         SceneManager.LoadScene(nextSceneName);
     }
 
+    private IEnumerator FadeCanvasGroup(float startAlpha, float endAlpha, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            logoCanvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
+            yield return null;
+        }
+        logoCanvasGroup.alpha = endAlpha;
+    }
 }
