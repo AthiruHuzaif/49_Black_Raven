@@ -401,6 +401,7 @@ GameObject:
   m_Component:
   - component: {fileID: 708376858}
   - component: {fileID: 708376859}
+  - component: {fileID: 708376860}
   m_Layer: 5
   m_Name: MapViewport
   m_TagString: Untagged
@@ -442,6 +443,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RectMask2D
   m_Padding: {x: 0, y: 0, z: 0, w: 0}
   m_Softness: {x: 0, y: 0}
+--- !u!114 &708376860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708376857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85fa9b88ebf17d4b8cfe2f6343ffbdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractiveMapParallax
+  viewportRect: {fileID: 708376858}
+  mapRect: {fileID: 1664015362}
+  maxPanOffset: {x: 80, y: 80}
+  smoothSpeed: 6
 --- !u!1 &830862438
 GameObject:
   m_ObjectHideFlags: 0
