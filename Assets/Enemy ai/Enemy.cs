@@ -1,15 +1,15 @@
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
-{
-    public float speed = 2f;
-    public Transform[] points;
+{ 
+    public float speed = 2f; //this is float speed defined the speed for the enemy
+    public Transform[] points; //this will flip the enemy so that it will look the correct way
 
     private int i;
     private SpriteRenderer spriteRenderer;
     void Start()
     {
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -23,9 +23,8 @@ public class Enemy : MonoBehaviour
             }
         }
 
-        transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime); //this is to tell the displacement
 
-        bool isIdle = (transform.position.x - points[i].position.x) < 0f;
-        spriteRenderer.flipX = isIdle;
+        spriteRenderer.flipX = (transform.position.x - points[i].position.x) < 0f; //formula to do the flip
     }
 }
