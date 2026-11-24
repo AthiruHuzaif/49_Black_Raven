@@ -30,12 +30,15 @@ public class TitleScreenDirector : MonoBehaviour
     [SerializeField] private float mapFlickerDuration = 1.0f;
     [SerializeField, Range(0f, 1f)] private float mapFinalAlpha = 0.65f;
 
+    [Header("Canvback Sequence")]
+    [SerializeField] private CanvasGroup canvbackGroup;
+    [SerializeField] private float canvbackFadeDuration = 0.5f;
+
     [Header("Flicker Tuning")]
     [SerializeField] private float flickerStepInterval = 0.045f;
     [SerializeField] private Vector2 flickerPositionJitter = new Vector2(18f, 10f);
     [SerializeField] private float flickerScaleJitter = 0.06f;
 
-    
     private void Start()
     {
         SetupInitialStates();
@@ -67,6 +70,13 @@ public class TitleScreenDirector : MonoBehaviour
         if (titleCardGroup != null) titleCardGroup.alpha = 0f;
         if (mapGroup != null) mapGroup.alpha = 0f;
         if (mapParallax != null) mapParallax.SetInteractive(false);
+
+        if (canvbackGroup != null)
+        {
+            canvbackGroup.alpha = 0f;
+            canvbackGroup.interactable = false;
+            canvbackGroup.blocksRaycasts = false;
+        }
     }
 
     private IEnumerator RunTitleSequence()
@@ -90,6 +100,9 @@ public class TitleScreenDirector : MonoBehaviour
             if (mapRect != null) mapParallax.UpdateBasePosition(mapRect.anchoredPosition);
             mapParallax.SetInteractive(true);
         }
+
+        // Fade in Canvback and all of its child elements
+        yield return StartCoroutine(FadeInCanvbackRoutine());
     }
 
     private IEnumerator FadeInRoutine()
@@ -196,5 +209,22 @@ public class TitleScreenDirector : MonoBehaviour
 
         titleCardRect.anchoredPosition = endPos;
         titleCardRect.localScale = endScale;
+    }
+
+    private IEnumerator FadeInCanvbackRoutine()
+    {
+        if (canvbackGroup == null) yield break;
+
+        float elapsed = 0f;
+        while (elapsed < canvbackFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            canvbackGroup.alpha = Mathf.Lerp(0f, 1f, Mathf.Clamp01(elapsed / canvbackFadeDuration));
+            yield return null;
+        }
+
+        canvbackGroup.alpha = 1f;
+        canvbackGroup.interactable = true;
+        canvbackGroup.blocksRaycasts = true;
     }
 }
