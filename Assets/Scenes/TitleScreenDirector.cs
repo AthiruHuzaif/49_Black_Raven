@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class TitleScreenDirector : MonoBehaviour
 {
+
+    //main var declaration layout
+
     [Header("Fade Overlay")]
     [SerializeField] private Image fadeOverlay;
     [SerializeField] private float fadeInDuration = 0.5f;
@@ -70,6 +73,7 @@ public class TitleScreenDirector : MonoBehaviour
         if (mapParallax != null) mapParallax.SetInteractive(false);
     }
 
+    // This coroutine declares the sequence of the title screen, including fade in, grid zoom, title card flicker, and map display
     private IEnumerator RunTitleSequence()
     {
         // T = 0.0s: Start 0.5s fade-in AND 1.0s grid spatial zoom-back simultaneously
@@ -97,6 +101,8 @@ public class TitleScreenDirector : MonoBehaviour
         }
     }
 
+    // Coroutine to fade in the overlay from black to transparent
+
     private IEnumerator FadeInRoutine()
     {
         if (fadeOverlay == null) yield break;
@@ -116,6 +122,8 @@ public class TitleScreenDirector : MonoBehaviour
         fadeOverlay.color = c;
         fadeOverlay.gameObject.SetActive(false);
     }
+
+    // Coroutine to zoom back the grid from a larger scale to normal scale
 
     private IEnumerator GridZoomBackRoutine()
     {
@@ -137,6 +145,8 @@ public class TitleScreenDirector : MonoBehaviour
 
         gridRect.localScale = Vector3.one;
     }
+
+    // Coroutine to flicker in a UI element (title card or map) with position and scale jitter
 
     private IEnumerator FlickerInRoutine(RectTransform targetRect, CanvasGroup targetGroup, float duration)
     {
@@ -183,6 +193,8 @@ public class TitleScreenDirector : MonoBehaviour
         targetRect.anchoredPosition = restingPos;
         targetRect.localScale = restingScale;
     }
+
+    // Coroutine to move and scale the title card to the top-left corner
 
     private IEnumerator MoveAndScaleTitleRoutine()
     {
