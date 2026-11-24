@@ -35,6 +35,7 @@ public class TitleScreenDirector : MonoBehaviour
     [SerializeField] private Vector2 flickerPositionJitter = new Vector2(18f, 10f);
     [SerializeField] private float flickerScaleJitter = 0.06f;
 
+    
     private void Start()
     {
         SetupInitialStates();
