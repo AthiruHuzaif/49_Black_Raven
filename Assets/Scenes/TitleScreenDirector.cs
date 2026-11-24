@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class TitleScreenDirector : MonoBehaviour
 {
-
-    //main var declaration layout
-
     [Header("Fade Overlay")]
     [SerializeField] private Image fadeOverlay;
     [SerializeField] private float fadeInDuration = 0.5f;
@@ -31,6 +28,7 @@ public class TitleScreenDirector : MonoBehaviour
     [SerializeField] private CanvasGroup mapGroup;
     [SerializeField] private InteractiveMapParallax mapParallax;
     [SerializeField] private float mapFlickerDuration = 1.0f;
+    [SerializeField, Range(0f, 1f)] private float mapFinalAlpha = 0.65f;
 
     [Header("Flicker Tuning")]
     [SerializeField] private float flickerStepInterval = 0.045f;
@@ -45,7 +43,6 @@ public class TitleScreenDirector : MonoBehaviour
 
     private void SetupInitialStates()
     {
-        // 1. Ensure FadeOverlay starts fully opaque black
         if (fadeOverlay != null)
         {
             fadeOverlay.gameObject.SetActive(true);
@@ -54,7 +51,6 @@ public class TitleScreenDirector : MonoBehaviour
             fadeOverlay.color = c;
         }
 
-        // 2. Size GridImage so scale 1.0 equals exact screen/canvas width, then start larger
         if (gridRect != null && canvasRect != null)
         {
             float targetWidth = canvasRect.rect.width;
@@ -67,41 +63,33 @@ public class TitleScreenDirector : MonoBehaviour
             gridRect.localScale = Vector3.one * gridStartScale;
         }
 
-        // 3. Hide TitleCard and Map initially
         if (titleCardGroup != null) titleCardGroup.alpha = 0f;
         if (mapGroup != null) mapGroup.alpha = 0f;
         if (mapParallax != null) mapParallax.SetInteractive(false);
     }
 
-    // This coroutine declares the sequence of the title screen, including fade in, grid zoom, title card flicker, and map display
     private IEnumerator RunTitleSequence()
     {
-        // T = 0.0s: Start 0.5s fade-in AND 1.0s grid spatial zoom-back simultaneously
         StartCoroutine(FadeInRoutine());
         StartCoroutine(GridZoomBackRoutine());
 
-        // Wait for the 0.5s fade-in to complete (halfway through the 1.0s grid zoom-back)
         yield return new WaitForSeconds(fadeInDuration);
 
-        // T = 0.5s: Flicker titlecard to life for 1.0s
-        yield return StartCoroutine(FlickerInRoutine(titleCardRect, titleCardGroup, titleFlickerDuration));
+        // Title card flickers up to full opacity (1.0f)
+        yield return StartCoroutine(FlickerInRoutine(titleCardRect, titleCardGroup, titleFlickerDuration, 1f));
 
-        // T = 1.5s: Hold titlecard steady for 0.5s
         yield return new WaitForSeconds(titlePauseDuration);
 
-        // T = 2.0s: Shrink titlecard to top-left corner AND flicker map to life simultaneously
+        // Shrink title card to corner while map flickers up to mapFinalAlpha (0.65f)
         StartCoroutine(MoveAndScaleTitleRoutine());
-        yield return StartCoroutine(FlickerInRoutine(mapRect, mapGroup, mapFlickerDuration));
+        yield return StartCoroutine(FlickerInRoutine(mapRect, mapGroup, mapFlickerDuration, mapFinalAlpha));
 
-        // Enable interactive hover parallax once the map has settled
         if (mapParallax != null)
         {
             if (mapRect != null) mapParallax.UpdateBasePosition(mapRect.anchoredPosition);
             mapParallax.SetInteractive(true);
         }
     }
-
-    // Coroutine to fade in the overlay from black to transparent
 
     private IEnumerator FadeInRoutine()
     {
@@ -123,8 +111,6 @@ public class TitleScreenDirector : MonoBehaviour
         fadeOverlay.gameObject.SetActive(false);
     }
 
-    // Coroutine to zoom back the grid from a larger scale to normal scale
-
     private IEnumerator GridZoomBackRoutine()
     {
         if (gridRect == null) yield break;
@@ -134,21 +120,16 @@ public class TitleScreenDirector : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / gridZoomDuration);
-
-            // Cubic ease-out: starts fast, decelerates smoothly to a stop at scale 1.0
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
             float currentScale = Mathf.Lerp(gridStartScale, 1f, easedT);
             gridRect.localScale = Vector3.one * currentScale;
-
             yield return null;
         }
 
         gridRect.localScale = Vector3.one;
     }
 
-    // Coroutine to flicker in a UI element (title card or map) with position and scale jitter
-
-    private IEnumerator FlickerInRoutine(RectTransform targetRect, CanvasGroup targetGroup, float duration)
+    private IEnumerator FlickerInRoutine(RectTransform targetRect, CanvasGroup targetGroup, float duration, float targetAlpha)
     {
         if (targetRect == null || targetGroup == null) yield break;
 
@@ -169,11 +150,9 @@ public class TitleScreenDirector : MonoBehaviour
                 stepTimer = 0f;
                 float progress = Mathf.Clamp01(elapsed / duration);
 
-                // Gradually stabilize opacity as the flicker nears completion
-                float minAlpha = Mathf.Lerp(0.05f, 0.75f, progress);
-                targetGroup.alpha = Random.value < 0.2f ? 0f : Random.Range(minAlpha, 1f);
+                float minAlpha = Mathf.Lerp(0.05f * targetAlpha, 0.75f * targetAlpha, progress);
+                targetGroup.alpha = Random.value < 0.2f ? 0f : Random.Range(minAlpha, targetAlpha);
 
-                // Jitter position and scale, tapering off near the end
                 float jitterDamp = 1f - (progress * 0.6f);
                 Vector2 offset = new Vector2(
                     Random.Range(-flickerPositionJitter.x, flickerPositionJitter.x) * jitterDamp,
@@ -188,13 +167,10 @@ public class TitleScreenDirector : MonoBehaviour
             yield return null;
         }
 
-        // Snap cleanly to exact resting state
-        targetGroup.alpha = 1f;
+        targetGroup.alpha = targetAlpha;
         targetRect.anchoredPosition = restingPos;
         targetRect.localScale = restingScale;
     }
-
-    // Coroutine to move and scale the title card to the top-left corner
 
     private IEnumerator MoveAndScaleTitleRoutine()
     {
