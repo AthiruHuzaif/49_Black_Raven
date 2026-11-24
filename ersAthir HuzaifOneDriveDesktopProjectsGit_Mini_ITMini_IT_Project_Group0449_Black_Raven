@@ -1,0 +1,35 @@
+[33mcommit 97eb1ec289a6d0b794a44800b88b8d1d44856c03[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mAthir-Branch[m[33m)[m
+Author: AthiruHuzaif <athir.huzaif@gmail.com>
+Date:   Tue Nov 24 06:07:07 2026 +0800
+
+    finally added dash after taking so long debugging and figuring out
+
+[33mcommit 9fd7329605260f21e826b45f22922d7ca4bb3821[m
+Author: AthiruHuzaif <athir.huzaif@gmail.com>
+Date:   Mon Nov 23 23:31:42 2026 +0800
+
+    i hope this works now. somehow it didnt show
+
+[33mcommit 9ba5fb6507a0e21d5cce835ef29707853bd2e0cc[m[33m ([m[1;31morigin/Athir-Branch[m[33m)[m
+Author: AthiruHuzaif <athir.huzaif@gmail.com>
+Date:   Mon Nov 23 23:27:11 2026 +0800
+
+    actually now should be working
+
+[33mcommit cc77192ff053bce2d2d0a750b754b8c8b076158f[m[33m ([m[1;32mcheckout[m[33m)[m
+Author: AthiruHuzaif <athir.huzaif@gmail.com>
+Date:   Mon Nov 23 17:43:27 2026 +0800
+
+    Player + Stage both in placeholder stage, movement initial code
+
+[33mcommit 02fdb56c7b0381cadbd51d68ebaa68d516a88a51[m
+Author: AthiruHuzaif <athir.huzaif@gmail.com>
+Date:   Mon Nov 23 17:34:08 2026 +0800
+
+    Player + Placeholder for test
+
+[33mcommit 44d9a62f15a238b4fbb09f37ffe290dc343bb06c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/Jayron's--1#Systems00[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Edward---Enemy-code[m[33m, [m[1;32mmain[m[33m, [m[1;32mlist[m[33m)[m
+Author: AthiruHuzaif <357149654+AthiruHuzaif@users.noreply.github.com>
+Date:   Thu Nov 19 03:30:23 2026 +0800
+
+    Initial check-in
